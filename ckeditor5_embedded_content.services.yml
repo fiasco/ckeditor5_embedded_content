@@ -1,0 +1,4 @@
+services:
+  plugin.manager.ckedito5_embedded_content:
+    class: Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager
+    parent: default_plugin_manager

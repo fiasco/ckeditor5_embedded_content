@@ -1,0 +1,15 @@
+ckeditor5_embedded_content.dialog:
+  path: '/embedded-content/dialog/{uuid}'
+  defaults:
+    _title: 'Insert embedded content'
+    _form: '\Drupal\ckeditor5_embedded_content\Form\EmbeddedContentDialogForm'
+    uuid: null
+  requirements:
+    _permission: 'use text format advanced'
+
+ckeditor5_embedded_content.preview:
+  path: '/embedded-content/preview/{editor}'
+  defaults:
+    _controller: '\Drupal\ckeditor5_embedded_content\Controller\EmbeddedContentPreview::preview'
+  requirements:
+    _custom_access: '\Drupal\ckeditor5_embedded_content\Controller\EmbeddedContentPreview::checkAccess'

@@ -1,0 +1,20 @@
+twitter:
+  js:
+    https://platform.twitter.com/widgets.js:
+      type: external
+      attributes: { async: true}
+
+embedded_content:
+  js:
+    js/build/EmbeddedContent.js: { preprocess: false, minified: true }
+  css:
+    theme:
+      css/embedded_content.css: { }
+  dependencies:
+    - ckeditor5/ckeditor5
+    - editor/drupal.editor.dialog
+
+admin.embedded_content:
+  css:
+    theme:
+      css/embedded_content.admin.css: { }

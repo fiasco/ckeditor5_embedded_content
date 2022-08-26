@@ -1,0 +1,15 @@
+{
+    "name": "drupal/ckeditor5_embedded_content",
+    "type": "drupal-module",
+    "description": "Provides a ckeditor5 and drupal plugin to embed styled content into ckeditor text areas.",
+    "homepage": "http://drupal.org/project/address",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "drupal/core": "^9.2 || ^10",
+        "ext-libxml": "*",
+        "ext-dom": "*",
+        "symfony/css-selector": "^6.1",
+        "symfony/dom-crawler": "^6.1"
+    }
+}

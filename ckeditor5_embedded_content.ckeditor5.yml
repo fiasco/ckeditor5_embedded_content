@@ -1,0 +1,28 @@
+ckeditor5_embedded_content_embeddedContent:
+  provider: ckeditor5_embedded_content
+  ckeditor5:
+    plugins:
+      - embeddedContent.EmbeddedContent
+    config:
+      embeddedContent:
+        openDialog:
+          func:
+            name: Drupal.ckeditor5.openDialog
+            invoke: false
+        dialogSettings:
+          height: 75%
+          dialogClass: embedded-content-widget-modal
+          title: Create embedded content
+  drupal:
+    label: Embedded content
+    elements:
+      - <embedded-content>
+      - <embedded-content data-uuid data-config>
+    admin_library: ckeditor5_embedded_content/admin.embedded_content
+    class: Drupal\ckeditor5_embedded_content\Plugin\CKEditor5Plugin\EmbeddedContent
+    library: ckeditor5_embedded_content/embedded_content
+    toolbar_items:
+      embeddedContent:
+        label: Embedded Content
+    conditions:
+      filter: ckeditor5_embedded_content

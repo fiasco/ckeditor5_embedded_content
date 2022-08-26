@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * The module file with theming functions.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function ckeditor5_embedded_content_examples_theme($existing, $type, $theme, $path) {
+  return [
+    'ckeditor5_embedded_content_call_to_action' => [
+      'variables' => [
+        'text' => NULL,
+        'url' => NULL,
+      ],
+      'template' => 'embedded-content/call-to-action',
+    ],
+    'ckeditor5_embedded_content_tweet' => [
+      'variables' => [
+        'url' => NULL,
+      ],
+      'template' => 'embedded-content/tweet',
+    ],
+  ];
+}

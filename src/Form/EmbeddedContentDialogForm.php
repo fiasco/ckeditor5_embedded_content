@@ -78,6 +78,8 @@ class EmbeddedContentDialogForm extends FormBase {
       }
     }
 
+    $form['#modal_selector'] = '#embedded-content-dialog-form';
+
     if ($uuid) {
       $form['uuid'] = [
         '#type' => 'value',
@@ -189,7 +191,7 @@ class EmbeddedContentDialogForm extends FormBase {
       ],
     ]));
 
-    $response->addCommand(new CloseModalDialogCommand());
+    $response->addCommand(new CloseModalDialogCommand(FALSE, '#embedded-content-dialog-form'));
     return $response;
   }
 

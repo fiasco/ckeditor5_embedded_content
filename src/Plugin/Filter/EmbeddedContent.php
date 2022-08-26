@@ -95,8 +95,7 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
           }
           // Don't throw html5 errors such as embedded media.
           libxml_use_internal_errors(TRUE);
-          $new = new \DOMDocument();
-          $new->loadHTML($render);
+          $new = Html::load($render);
           libxml_clear_errors();
           $new_node = $document->importNode($new->documentElement, TRUE);
           libxml_use_internal_errors(FALSE);

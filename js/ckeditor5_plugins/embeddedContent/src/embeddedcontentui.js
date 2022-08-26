@@ -73,7 +73,8 @@ export default class EmbeddedContentUI extends Plugin {
       const modelElement = editor.editing.mapper.toModelElement( data.target);
       if(modelElement && typeof modelElement.name !== 'undefined' && modelElement.name === 'embeddedContent'){
         const query = {
-          config: modelElement.getAttribute('embeddedContentConfig'),
+          plugin_id: modelElement.getAttribute('embeddedContentPluginId'),
+          plugin_config: modelElement.getAttribute('embeddedContentPluginConfig'),
         };
         openDialog(
           `${dialogURL}?${new URLSearchParams(query)}`,

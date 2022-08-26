@@ -69,21 +69,19 @@ class EmbeddedContentDialogForm extends FormBase {
     $config = $form_state->getUserInput()['config'] ?? [];
 
     if(!$config){
-      $config = $request->get('config');
-      if($config){
-        $config = Xss::filter($config);
-        $config = Json::decode($config);
+      $plugin_config = $request->get('plugin_config');
+      $plugin_config = Xss::filter($plugin_config);
+      $plugin_id = $request->get('plugin_id');
+      if($plugin_id && $plugin_config){
+        $config = [
+          'plugin_id' => $plugin_id,
+          'plugin_config' => Json::decode($plugin_config),
+        ];
       }
     }
 
 
-    $form['#modal_selector'] = '#embedded-content-dialog-form';
 
-    $form['#attributes']['style'] = ['min-width: 500px'];
-
-    if (isset($form_state->getUserInput()['editor_object'])) {
-      $config = Json::decode($form_state->getUserInput()['editor_object']['config']) ?? [];
-    }
 
     if ($uuid) {
       $form['uuid'] = [
@@ -99,6 +97,7 @@ class EmbeddedContentDialogForm extends FormBase {
       ];
       return $form;
     }
+    $plugin_id = $config['plugin_id'] ?? NULL;
 
     $form['config'] = [
       '#type' => 'container',
@@ -106,11 +105,11 @@ class EmbeddedContentDialogForm extends FormBase {
       '#attributes' => [
         'id' => $this->ajaxWrapper,
       ],
-      'plugin' => [
+      'plugin_id' => [
         '#type' => 'select',
         '#title' => $this->t('Embedded content'),
         '#empty_option' => $this->t('- Select a type -'),
-        '#default_value' => $config['plugin'] ?? '',
+        '#default_value' => $plugin_id,
         '#options' => array_map(function ($definition) {
           return $definition['label'];
         }, $definitions),
@@ -122,7 +121,6 @@ class EmbeddedContentDialogForm extends FormBase {
         ],
       ],
     ];
-    $plugin_id = $config['plugin'] ?? '';
     if ($plugin_id) {
       /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
       try {
@@ -188,24 +186,13 @@ class EmbeddedContentDialogForm extends FormBase {
 
     $response = new AjaxResponse();
 
-    $dom = new \DOMDocument();
-    $placeholder = $dom->createElement('embedded-content');
-
-    // Set the entire config as JSON attribute.
-    $placeholder->setAttribute('data-config', Json::encode($config));
-
-    if (!($uuid = $form_state->getValue('uuid'))) {
-      $uuid = \Drupal::service('uuid')->generate();
-    }
-
     $response->addCommand(new EditorDialogSave([
       'attributes' => [
-        'data-config' => Json::encode($config),
-        'data-uuid' => $uuid,
+        'data-plugin-id' => $config['plugin_id'],
+        'data-plugin-config' => Json::encode($config['plugin_config']),
       ],
     ]));
 
-    // $response->addCommand(new CloseModalDialogCommand(FALSE, '#embedded-content-dialog-form'));
     $response->addCommand(new CloseModalDialogCommand());
     return $response;
   }
@@ -214,37 +201,18 @@ class EmbeddedContentDialogForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($collection = $form_state->getValue(['config', 'collection'])) {
-      if (empty($collection)) {
-        $form_state->setError($form, new TranslatableMarkup('The configuration cannot be empty.'));
-      }
-      else {
-        foreach ($collection as $delta => $item) {
-          if ($item['use_other'] && !$item['webform']) {
-            $form_state->setError($form['config']['collection'][$delta]['webform'], new TranslatableMarkup('The webform is required'));
-          }
-          else {
-            // Clean the remove button from the configuration.
-            unset($item['remove_item']);
-            $item['webform'] = $form_state->getValue('current_webform')->id();
-          }
-        }
-      }
-      $form_state->setValue(['config', 'collection'], $collection);
-    }
-
     /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
-    $plugin_id = $form_state->getValue(['config', 'plugin']);
+    $plugin_id = $form_state->getValue(['config', 'plugin_id']);
     if ($plugin_id) {
       try {
         $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $form_state->getValue([
           'config',
           'plugin_config',
-        ]));
-        $subform_state = SubformState::createForSubform($form['config']['plugin_config'], $form, $form_state);
-        $instance->validateConfigurationForm($form['config']['plugin_config'], $subform_state);
+        ]) ?? []);
+        $subform = $form['config']['plugin_config'] ?? [];
+        $subform_state = SubformState::createForSubform($subform, $form, $form_state);
+        $instance->validateConfigurationForm($subform, $subform_state);
         $config = $form_state->getValue('config');
-        unset($config['add_item']);
         $form_state->setValue('config', $config);
       }
       catch (\Exception $exception) {

@@ -19,8 +19,8 @@ export default class EmbeddedContentEditing extends Plugin {
    */
   init() {
     this.attrs = {
-      embeddedContentConfig: 'data-config',
-      embeddedContentUuid: 'data-uuid',
+      embeddedContentPluginConfig: 'data-plugin-config',
+      embeddedContentPluginId: 'data-plugin-id',
     };
     const options = this.editor.config.get('embeddedContent');
     if (!options) {
@@ -50,7 +50,8 @@ export default class EmbeddedContentEditing extends Plugin {
    */
   async _fetchPreview(modelElement) {
     const query = {
-      config: modelElement.getAttribute('embeddedContentConfig'),
+      plugin_id: modelElement.getAttribute('embeddedContentPluginId'),
+      plugin_config: modelElement.getAttribute('embeddedContentPluginConfig'),
     };
     const response = await fetch(
       `${this.previewUrl}?${new URLSearchParams(query)}`
@@ -109,7 +110,7 @@ export default class EmbeddedContentEditing extends Plugin {
         view: (modelElement, {writer}) => {
           const container = writer.createContainerElement('figure');
           return toWidget(container, writer, {
-            label: Drupal.t('Media widget'),
+            label: Drupal.t('Embedded content'),
           });
 
         },
@@ -141,15 +142,7 @@ export default class EmbeddedContentEditing extends Plugin {
             });
           });
         };
-
-        dispatcher.on('attribute:embeddedContentUuid:embeddedContent', converter);
-        dispatcher.on(
-          'attribute:drupalElementStyleViewMode:embeddedContent',
-          converter,
-        );
-        dispatcher.on('attribute:embeddedContentEntityType:embeddedContent', converter);
-        dispatcher.on('attribute:embeddedContentAlt:embeddedContent', converter);
-
+        dispatcher.on('attribute:embeddedContentPluginId:embeddedContent', converter);
         return dispatcher;
       });
 

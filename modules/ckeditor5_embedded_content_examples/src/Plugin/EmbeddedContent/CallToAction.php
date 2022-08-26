@@ -46,13 +46,9 @@ class CallToAction extends EmbeddedContentPluginBase implements EmbeddedContentI
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['url'] = [
-      '#type' => 'linkit',
+      '#type' => 'url',
       '#title' => $this->t('Url'),
       '#default_value' => $this->configuration['url'],
-      '#autocomplete_route_name' => 'linkit.autocomplete',
-      '#autocomplete_route_parameters' => [
-        'linkit_profile_id' => 'content',
-      ],
       '#required' => TRUE,
     ];
     $form['text'] = [

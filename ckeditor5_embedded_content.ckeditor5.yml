@@ -17,7 +17,7 @@ ckeditor5_embedded_content_embeddedContent:
     label: Embedded content
     elements:
       - <embedded-content>
-      - <embedded-content data-uuid data-config>
+      - <embedded-content data-plugin-config data-plugin-id>
     admin_library: ckeditor5_embedded_content/admin.embedded_content
     class: Drupal\ckeditor5_embedded_content\Plugin\CKEditor5Plugin\EmbeddedContent
     library: ckeditor5_embedded_content/embedded_content

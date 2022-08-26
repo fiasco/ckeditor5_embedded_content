@@ -9,8 +9,10 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -76,20 +78,30 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
       ->each(function (Crawler $crawler) use ($document, &$attachments) {
         /** @var \DOMElement $node */
         $node = $crawler->getNode(0);
-        $config = Json::decode($node->getAttribute('data-config'));
-        /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
-        $instance = $this->embeddedContentPluginManager->createInstance($config['plugin'], $config['plugin_config']);
-        $attachments = BubbleableMetadata::mergeAttachments($attachments, $instance->getAttachments());
-        $replacement = $instance->build();
-        $render = $this->renderer->renderPlain($replacement);
-        // Don't throw html5 errors such as embedded media.
-        libxml_use_internal_errors(TRUE);
-        $new = new \DOMDocument();
-        $new->loadHTML($render);
-        libxml_clear_errors();
-        $new_node = $document->importNode($new->documentElement, TRUE);
-        libxml_use_internal_errors(FALSE);
-        $node->parentNode->replaceChild($new_node, $node);
+        $plugin_config = Json::decode($node->getAttribute('data-plugin-config'));
+        $plugin_id = $node->getAttribute('data-plugin-id');
+
+        if(!$plugin_id || !$plugin_config){
+
+        } else {
+          try {
+            /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
+            $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $plugin_config);
+            $attachments = BubbleableMetadata::mergeAttachments($attachments, $instance->getAttachments());
+            $replacement = $instance->build();
+            $render = $this->renderer->renderPlain($replacement);
+          } catch (Exception $e){
+            $render = (new TranslatableMarkup('Something went wrong.'));
+          }
+          // Don't throw html5 errors such as embedded media.
+          libxml_use_internal_errors(TRUE);
+          $new = new \DOMDocument();
+          $new->loadHTML($render);
+          libxml_clear_errors();
+          $new_node = $document->importNode($new->documentElement, TRUE);
+          libxml_use_internal_errors(FALSE);
+          $node->parentNode->replaceChild($new_node, $node);
+        }
       });
     $result = new FilterProcessResult(Html::serialize($document));
     $result->addAttachments($attachments);

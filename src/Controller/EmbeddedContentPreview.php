@@ -3,6 +3,7 @@
 namespace Drupal\ckeditor5_embedded_content\Controller;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Render\Renderer;
 use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
@@ -68,7 +69,11 @@ class EmbeddedContentPreview extends ControllerBase {
       if (!$config) {
         throw new \Exception();
       }
+
+      $config = Xss::filter($config);
+
       $config = Json::decode($config);
+
       if (!isset($config['plugin']) || !isset($config['plugin_config'])) {
         throw new \Exception();
       }

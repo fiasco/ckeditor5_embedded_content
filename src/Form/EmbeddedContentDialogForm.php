@@ -3,6 +3,7 @@
 namespace Drupal\ckeditor5_embedded_content\Form;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\SubformState;
 use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -70,6 +71,7 @@ class EmbeddedContentDialogForm extends FormBase {
     if(!$config){
       $config = $request->get('config');
       if($config){
+        $config = Xss::filter($config);
         $config = Json::decode($config);
       }
     }

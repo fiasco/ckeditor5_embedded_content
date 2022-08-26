@@ -4,4 +4,4 @@ description: Provides an Embedded Content plugin and Ckeditor 5 plugin.
 package: Custom
 core_version_requirement: ^9 || ^10
 dependencies:
-  - core:ckeditor5
+  - drupal:ckeditor5

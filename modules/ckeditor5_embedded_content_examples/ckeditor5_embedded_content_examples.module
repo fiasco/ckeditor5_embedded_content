@@ -23,5 +23,12 @@ function ckeditor5_embedded_content_examples_theme($existing, $type, $theme, $pa
       ],
       'template' => 'embedded-content/tweet',
     ],
+    'ckeditor5_styled_list' => [
+      'variables' => [
+        'items' => NULL,
+        'style' => NULL,
+      ],
+      'template' => 'embedded-content/styled-list',
+    ],
   ];
 }

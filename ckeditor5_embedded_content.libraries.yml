@@ -6,7 +6,7 @@ twitter:
 
 embedded_content:
   js:
-    js/build/EmbeddedContent.js: { preprocess: false, minified: true }
+    js/build/embeddedContent.js: { preprocess: false, minified: true }
   css:
     theme:
       css/embedded_content.css: { }

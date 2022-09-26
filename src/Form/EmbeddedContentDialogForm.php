@@ -178,7 +178,7 @@ class EmbeddedContentDialogForm extends FormBase {
    * @return \Drupal\Core\Ajax\AjaxResponse|array
    *   Ajax response for injecting html in ckeditor.
    */
-  public static function ajaxSubmitForm(array &$form, FormStateInterface $form_state): AjaxResponse|array {
+  public static function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getErrors()) {
       return $form['config'];
     }

@@ -102,8 +102,8 @@ class StyledList extends EmbeddedContentPluginBase implements EmbeddedContentInt
       $element['body'] = [
         '#type' => 'text_format',
         '#title' => $this->t('Body'),
-        '#format' => $this->configuration['items'][$delta]['body']['format'] ?? 'basic',
-        '#allowed_formats' => ['basic'],
+        '#format' => $this->configuration['items'][$delta]['body']['format'] ?? 'basic_html',
+        '#allowed_formats' => ['basic_html'],
         '#default_value' => $this->configuration['items'][$delta]['body']['value'] ?? '',
         '#required' => TRUE,
       ];

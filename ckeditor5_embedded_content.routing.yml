@@ -5,7 +5,7 @@ ckeditor5_embedded_content.dialog:
     _form: '\Drupal\ckeditor5_embedded_content\Form\EmbeddedContentDialogForm'
     uuid: null
   requirements:
-    _permission: 'use text format advanced'
+    _permission: 'use ckeditor5 embedded content'
 
 ckeditor5_embedded_content.preview:
   path: '/embedded-content/preview/{editor}'

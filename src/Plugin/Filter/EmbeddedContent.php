@@ -63,7 +63,7 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
       $plugin_id,
       $plugin_definition,
       $container->get('renderer'),
-      $container->get('plugin.manager.ckedito5_embedded_content')
+      $container->get('plugin.manager.ckeditor5_embedded_content')
     );
   }
 

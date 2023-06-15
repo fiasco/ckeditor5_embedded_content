@@ -48,7 +48,7 @@ class EmbeddedContentDialogForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.ckedito5_embedded_content')
+      $container->get('plugin.manager.ckeditor5_embedded_content')
     );
   }
 

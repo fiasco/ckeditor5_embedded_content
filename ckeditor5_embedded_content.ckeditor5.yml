@@ -11,6 +11,7 @@ ckeditor5_embedded_content_embeddedContent:
             invoke: false
         dialogSettings:
           height: 75%
+          width: 80%
           dialogClass: embedded-content-widget-modal
           title: Create embedded content
   drupal:

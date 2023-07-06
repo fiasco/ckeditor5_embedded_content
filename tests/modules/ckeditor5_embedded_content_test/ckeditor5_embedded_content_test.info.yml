@@ -1,0 +1,7 @@
+name: Ckeditor 5 Embedded Content
+type: module
+description: "Provides embedded content plugins for testing"
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:ckeditor5_embedded_content

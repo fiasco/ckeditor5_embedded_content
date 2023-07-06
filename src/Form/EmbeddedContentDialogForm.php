@@ -2,15 +2,14 @@
 
 namespace Drupal\ckeditor5_embedded_content\Form;
 
+use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Form\SubformState;
-use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Form\SubformState;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -68,20 +67,17 @@ class EmbeddedContentDialogForm extends FormBase {
 
     $config = $form_state->getUserInput()['config'] ?? [];
 
-    if(!$config){
-      $plugin_config = $request->get('plugin_config');
+    if (!$config) {
+      $plugin_config = $request->get('plugin_config') ?? '';
       $plugin_config = Xss::filter($plugin_config);
       $plugin_id = $request->get('plugin_id');
-      if($plugin_id && $plugin_config){
+      if ($plugin_id && $plugin_config) {
         $config = [
           'plugin_id' => $plugin_id,
           'plugin_config' => Json::decode($plugin_config),
         ];
       }
     }
-
-
-
 
     if ($uuid) {
       $form['uuid'] = [

@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor5_embedded_content\Plugin\Filter;
 
+use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -9,11 +10,9 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -82,7 +81,7 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
         $plugin_config = Json::decode($node->getAttribute('data-plugin-config'));
         $plugin_id = $node->getAttribute('data-plugin-id');
 
-        if(!$plugin_id || !$plugin_config){
+        if (!$plugin_id || !$plugin_config) {
           return;
         }
         try {
@@ -95,7 +94,8 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
           if (!$context->isEmpty()) {
             $bubbleable->merge($context->pop());
           }
-        } catch (Exception $e){
+        }
+        catch (\Exception $e) {
           $render = (new TranslatableMarkup('Something went wrong.'));
         }
         // Don't throw html5 errors such as embedded media.

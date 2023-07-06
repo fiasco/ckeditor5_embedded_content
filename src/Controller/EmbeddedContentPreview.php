@@ -2,12 +2,12 @@
 
 namespace Drupal\ckeditor5_embedded_content\Controller;
 
+use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Render\Renderer;
-use Drupal\ckeditor5_embedded_content\EmbeddedContentPluginManager;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Render\Renderer;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\Entity\Editor;

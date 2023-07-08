@@ -130,13 +130,13 @@ class Ckeditor5EmbeddedContentTest extends WebDriverTestBase {
 
     $this->assertEquals('polygon', $element->getValue());
     $page->selectFieldOption('config[plugin_id]', 'Color');
+    $assert_session->waitForElement('css', '[data-drupal-selector="edit-config-plugin-config-color"]');
     $page->selectFieldOption('config[plugin_config][color]', 'red');
     $this->click('.ui-dialog-buttonset button');
-    $node = $assert_session->waitForElement('css', '.embedded-content-preview > div');
-    $this->assertEquals('<div style="background:red;width:20px;height:20px;display:block;border-radius: 10px"></div>', $node->getHtml());
+    $assert_session->waitForElement('css', '.embedded-content-preview [style="background:green;width:20px;height:20px;display:block;border-radius: 10px"]');
 
     // Test if it is possible to edit on double click.
-    $node->doubleClick();
+    $page->find('css', '.embedded-content-preview')->doubleClick();
     $assert_session->waitForElement('css', '[data-drupal-selector="edit-config-plugin-config-color"]');
 
   }

@@ -52,13 +52,29 @@ export default class EmbeddedContentUI extends Plugin {
       buttonView.bind('isOn', 'isEnabled').to(command, 'value', 'isEnabled');
 
       this.listenTo(buttonView, 'execute', () => {
-        openDialog(
-          dialogURL,
-          ({ attributes }) => {
-            editor.execute('embeddedContent', attributes);
-          },
-          dialogSettings,
-        );
+        const modelElement = editor.model.document.selection.getSelectedElement();
+        if (modelElement && typeof modelElement.name !== 'undefined' && modelElement.name === 'embeddedContent') {
+          const query = {
+            plugin_id: modelElement.getAttribute('embeddedContentPluginId'),
+            plugin_config: modelElement.getAttribute('embeddedContentPluginConfig'),
+          };
+          console.log(query)
+          openDialog(
+              `${dialogURL}?${new URLSearchParams(query)}`,
+              ({ attributes }) => {
+                editor.execute('embeddedContent', attributes);
+              },
+              dialogSettings,
+          );
+        } else {
+          openDialog(
+              dialogURL,
+              ({attributes}) => {
+                editor.execute('embeddedContent', attributes);
+              },
+              dialogSettings,
+          );
+        }
       });
 
       return buttonView;

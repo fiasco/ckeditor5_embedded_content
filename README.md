@@ -18,3 +18,10 @@ Enable the Embedded Content text filter:
 
 Create one or more 'EmbeddedContent' plugins.
 - Enable ckeditor5_embedded_content_examples for a working example.
+
+## Development
+
+This module has been tested using build of node version 18. Use nvm to install and/or change to version 18.
+
+1. npm install
+2. npm run build

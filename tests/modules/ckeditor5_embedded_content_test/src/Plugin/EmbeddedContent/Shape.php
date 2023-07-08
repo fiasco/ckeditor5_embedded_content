@@ -75,6 +75,7 @@ class Shape extends EmbeddedContentPluginBase implements EmbeddedContentInterfac
         self::POLYGON => $this->t('Polygon'),
         self::CIRCLE => $this->t('Circle'),
       ],
+      '#default_value' => $this->configuration['shape'],
     ];
 
     return $form;

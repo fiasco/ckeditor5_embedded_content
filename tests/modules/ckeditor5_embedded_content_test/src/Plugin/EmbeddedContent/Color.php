@@ -62,6 +62,7 @@ class Color extends EmbeddedContentPluginBase implements EmbeddedContentInterfac
         self::RED => $this->t('Red'),
         self::BLUE => $this->t('Blue'),
       ],
+      '#default_value' => $this->configuration['color'],
     ];
 
     return $form;

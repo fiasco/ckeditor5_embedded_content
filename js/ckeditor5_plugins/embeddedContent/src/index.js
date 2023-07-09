@@ -1,8 +1,8 @@
-import EmbeddedContent from "./embeddedcontent";
+import EmbeddedContent from './embeddedcontent';
 
 /**
  * @private
  */
 export default {
-    EmbeddedContent: EmbeddedContent
-    };
+  EmbeddedContent: EmbeddedContent,
+};

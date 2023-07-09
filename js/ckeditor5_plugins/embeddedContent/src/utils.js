@@ -10,9 +10,8 @@ import { isWidget } from 'ckeditor5/src/widget';
  *
  * @private
  */
-export function isEmbeddedContent(modelElement)
-{
-    return !!modelElement && modelElement.is('element', 'embeddedContent');
+export function isEmbeddedContent(modelElement) {
+  return !!modelElement && modelElement.is('element', 'embeddedContent');
 }
 
 /**
@@ -25,14 +24,13 @@ export function isEmbeddedContent(modelElement)
  *
  * @private
  */
-export function isEmbeddedContentWidget(viewElement)
-{
-    console.log(viewElement);
-    console.log(isWidget(viewElement));
-    console.log(viewElement.getCustomProperty);
-    return (
+export function isEmbeddedContentWidget(viewElement) {
+  console.log(viewElement);
+  console.log(isWidget(viewElement));
+  console.log(viewElement.getCustomProperty);
+  return (
     isWidget(viewElement) && !!viewElement.getCustomProperty('embeddedContent')
-    );
+  );
 }
 
 /**
@@ -47,11 +45,10 @@ export function isEmbeddedContentWidget(viewElement)
  *
  * @private
  */
-export function getClosestSelectedEmbeddedContentElement(selection)
-{
-    const selectedElement = selection.getSelectedElement();
+export function getClosestSelectedEmbeddedContentElement(selection) {
+  const selectedElement = selection.getSelectedElement();
 
-    return isEmbeddedContent(selectedElement)
+  return isEmbeddedContent(selectedElement)
     ? selectedElement
     : selection.getFirstPosition().findAncestor('embeddedContent');
 }
@@ -66,24 +63,23 @@ export function getClosestSelectedEmbeddedContentElement(selection)
  *
  * @private
  */
-export function getClosestSelectedEmbeddedContentWidget(selection)
-{
-    const viewElement = selection.getSelectedElement();
-    if (viewElement && isEmbeddedContentWidget(viewElement)) {
-        return viewElement;
+export function getClosestSelectedEmbeddedContentWidget(selection) {
+  const viewElement = selection.getSelectedElement();
+  if (viewElement && isEmbeddedContentWidget(viewElement)) {
+    return viewElement;
+  }
+
+  let parent = selection.getFirstPosition().parent;
+
+  while (parent) {
+    if (parent.is('element') && isEmbeddedContentWidget(parent)) {
+      return parent;
     }
 
-    let parent = selection.getFirstPosition().parent;
+    parent = parent.parent;
+  }
 
-    while (parent) {
-        if (parent.is('element') && isEmbeddedContentWidget(parent)) {
-            return parent;
-        }
-
-        parent = parent.parent;
-    }
-
-    return null;
+  return null;
 }
 
 /**
@@ -97,10 +93,9 @@ export function getClosestSelectedEmbeddedContentWidget(selection)
  * @return {boolean}
  *   True if value is an object, else false.
  */
-export function isObject(value)
-{
-    const type = typeof value;
-    return value != null && (type === 'object' || type === 'function');
+export function isObject(value) {
+  const type = typeof value;
+  return value != null && (type === 'object' || type === 'function');
 }
 
 /**
@@ -111,25 +106,24 @@ export function isObject(value)
  * @return {null|module:engine/view/element~Element}
  *   The preview child element if available.
  */
-export function getPreviewContainer(children)
-{
-    // eslint-disable-next-line no-restricted-syntax
-    for (const child of children) {
-        if (child.hasAttribute('data-embedded-content-preview')) {
-            return child;
-        }
-
-        if (child.childCount) {
-            const recursive = getPreviewContainer(child.getChildren());
-            // Return only if preview container was found within this element's
-            // children.
-            if (recursive) {
-                return recursive;
-            }
-        }
+export function getPreviewContainer(children) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const child of children) {
+    if (child.hasAttribute('data-embedded-content-preview')) {
+      return child;
     }
 
-    return null;
+    if (child.childCount) {
+      const recursive = getPreviewContainer(child.getChildren());
+      // Return only if preview container was found within this element's
+      // children.
+      if (recursive) {
+        return recursive;
+      }
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -145,9 +139,8 @@ export function getPreviewContainer(children)
  *
  * @internal
  */
-export function groupNameToModelAttributeKey(group)
-{
-    // Manipulate string to have first letter capitalized to append in camel case.
-    const capitalizedFirst = group[0].toUpperCase() + group.substring(1);
-    return `drupalElementStyle${capitalizedFirst}`;
+export function groupNameToModelAttributeKey(group) {
+  // Manipulate string to have first letter capitalized to append in camel case.
+  const capitalizedFirst = group[0].toUpperCase() + group.substring(1);
+  return `drupalElementStyle${capitalizedFirst}`;
 }

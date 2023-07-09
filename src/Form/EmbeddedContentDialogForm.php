@@ -140,6 +140,7 @@ class EmbeddedContentDialogForm extends FormBase {
         '#ajax' => [
           'callback' => [$this, 'ajaxSubmitForm'],
           'wrapper' => $this->ajaxWrapper,
+          'disable-refocus' => TRUE,
         ],
       ],
     ];

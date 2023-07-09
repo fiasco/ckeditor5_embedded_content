@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
 
 /**
  * Defines tests for the ckeditor5 button and javascript functionality.
- * 
+ *
  * @group ckeditor5_embedded_content
  */
 class Ckeditor5EmbeddedContentTest extends WebDriverTestBase {

@@ -64,19 +64,15 @@ class EmbeddedContentPreview extends ControllerBase {
    */
   public function preview(Request $request, Editor $editor) {
     $plugin_id = $request->query->get('plugin_id');
-    $plugin_config = $request->query->get('plugin_config');
-
     try {
-      if (!$plugin_config || !$plugin_id) {
+      if (!$plugin_id) {
         throw new \Exception();
       }
-
-      $plugin_config = Xss::filter($plugin_config);
-      $plugin_config = Json::decode($plugin_config);
+      $plugin_config = ($plugin_config = $request->get('plugin_config')) ? Xss::filter($plugin_config) : '';
       $plugin_id = Xss::filter($plugin_id);
 
       /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
-      $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $plugin_config);
+      $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $plugin_config ? Json::decode($plugin_config) : []);
       $build = $instance->build();
     }
     catch (\Exception $e) {

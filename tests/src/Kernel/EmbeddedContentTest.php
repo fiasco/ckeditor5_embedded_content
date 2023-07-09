@@ -25,7 +25,7 @@ final class EmbeddedContentTest extends KernelTestBase {
   protected static $modules = [
     'filter',
     'ckeditor5_embedded_content',
-    'ckeditor5_embedded_content_examples',
+    'ckeditor5_embedded_content_test',
   ];
 
   /**
@@ -56,7 +56,8 @@ final class EmbeddedContentTest extends KernelTestBase {
    */
   protected function getRenderedContent(string $content): string {
     $context = new RenderContext();
-    return \Drupal::service('renderer')->executeInRenderContext($context, fn ()  => (string) $this->filter->process($content, Language::LANGCODE_NOT_SPECIFIED));
+    return \Drupal::service('renderer')
+      ->executeInRenderContext($context, fn() => (string) $this->filter->process($content, Language::LANGCODE_NOT_SPECIFIED));
   }
 
   /**
@@ -76,18 +77,32 @@ final class EmbeddedContentTest extends KernelTestBase {
    * Tests embed filter.
    */
   public function testFilter(): void {
-    $config = $this->encodePluginConfig([
-      'url' => 'https://example.com',
-      'text' => 'Do it!',
-    ]);
+    $config = $this->encodePluginConfig(
+          [
+            'color' => 'green',
+          ]
+      );
     $markup = <<<HTML
-<embedded-content data-plugin-config="$config" data-plugin-id="call_to_action">&nbsp;</embedded-content>
+<embedded-content data-plugin-config="$config" data-plugin-id="color">&nbsp;</embedded-content>
 HTML;
 
-    $content = $this->getRenderedContent($markup);
+    $context = new RenderContext();
+    $content = \Drupal::service('renderer')
+      ->executeInRenderContext($context, fn() => (string) $this->filter->process($markup, Language::LANGCODE_NOT_SPECIFIED));
+
     $crawler = new Crawler($content);
-    $this->assertCount(1, $crawler->filter(sprintf('p a:contains("%s")', 'Do it!')));
+
+    $this->assertCount(1, $crawler->filter('div[style="background:green;width:20px;height:20px;display:block;border-radius: 10px"]'));
     $this->assertCount(0, $crawler->filter('meta'));
+
+    $markup = <<<HTML
+<embedded-content data-plugin-config="[]" data-plugin-id="no_config">&nbsp;</embedded-content>
+HTML;
+
+    $result = $this->filter->process($markup, Language::LANGCODE_NOT_SPECIFIED);
+
+    $this->assertEquals(0, $result->getCacheMaxAge());
+    $this->assertEquals('ckeditor5_embedded_content_test/test', $result->getAttachments()['library'][0]);
   }
 
 }

@@ -38,46 +38,54 @@ class Ckeditor5EmbeddedContentTest extends WebDriverTestBase {
   public function setUp(): void {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'page']);
-    FilterFormat::create([
-      'format' => 'test',
-      'name' => 'Ckeditor 5 with embedded content',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
-      'filters' => [
-        'ckeditor5_embedded_content' => [
-          'id' => 'ckeditor5_embedded_content',
-          'provider' => 'ckeditor5_embedded_content',
-          'status' => TRUE,
-          'weight' => 1,
-        ],
-        'filter_html' => [
-          'id' => 'filter_html',
-          'status' => TRUE,
-          'weight' => 2,
-          'settings' => [
-            'allowed_html' => '<br> <p> <embedded-content data-plugin-config data-plugin-id>',
-            'filter_html_help' => TRUE,
-            'filter_html_nofollow' => FALSE,
-          ],
-        ],
-      ],
-    ])->save();
-    Editor::create([
-      'format' => 'test',
-      'editor' => 'ckeditor5',
-      'settings' => [
-        'toolbar' => [
-          'items' => ['embeddedContent', 'sourceEditing'],
-        ],
-      ],
-    ])->save();
+    FilterFormat::create(
+          [
+            'format' => 'test',
+            'name' => 'Ckeditor 5 with embedded content',
+            'roles' => [RoleInterface::AUTHENTICATED_ID],
+            'filters' => [
+              'ckeditor5_embedded_content' => [
+                'id' => 'ckeditor5_embedded_content',
+                'provider' => 'ckeditor5_embedded_content',
+                'status' => TRUE,
+                'weight' => 1,
+              ],
+              'filter_html' => [
+                'id' => 'filter_html',
+                'status' => TRUE,
+                'weight' => 2,
+                'settings' => [
+                  'allowed_html' => '<br> <p> <embedded-content data-plugin-config data-plugin-id>',
+                  'filter_html_help' => TRUE,
+                  'filter_html_nofollow' => FALSE,
+                ],
+              ],
+            ],
+          ]
+      )->save();
+    Editor::create(
+          [
+            'format' => 'test',
+            'editor' => 'ckeditor5',
+            'settings' => [
+              'toolbar' => [
+                'items' => ['embeddedContent', 'sourceEditing'],
+              ],
+            ],
+          ]
+      )->save();
 
-    $this->drupalLogin($this->drupalCreateUser([
-      'create page content',
-      'edit own page content',
-      'access content',
-      'use ckeditor5 embedded content',
-      'use text format test',
-    ]));
+    $this->drupalLogin(
+          $this->drupalCreateUser(
+              [
+                'create page content',
+                'edit own page content',
+                'access content',
+                'use ckeditor5 embedded content',
+                'use text format test',
+              ]
+          )
+      );
 
   }
 

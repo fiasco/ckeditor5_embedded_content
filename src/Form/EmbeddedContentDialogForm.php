@@ -68,8 +68,7 @@ class EmbeddedContentDialogForm extends FormBase {
     $config = $form_state->getUserInput()['config'] ?? [];
 
     if (!$config) {
-      $plugin_config = $request->get('plugin_config') ?? '';
-      $plugin_config = Xss::filter($plugin_config);
+      $plugin_config = ($plugin_config = $request->get('plugin_config')) ? Xss::filter($plugin_config) : '';
       $plugin_id = $request->get('plugin_id');
       if ($plugin_id && $plugin_config) {
         $config = [
@@ -185,7 +184,7 @@ class EmbeddedContentDialogForm extends FormBase {
     $response->addCommand(new EditorDialogSave([
       'attributes' => [
         'data-plugin-id' => $config['plugin_id'],
-        'data-plugin-config' => Json::encode($config['plugin_config']),
+        'data-plugin-config' => Json::encode($config['plugin_config'] ?? []),
       ],
     ]));
 

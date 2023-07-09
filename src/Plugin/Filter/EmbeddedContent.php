@@ -74,30 +74,29 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
     $document = Html::load($text);
     $crawler = new Crawler($document);
     $bubbleable = new BubbleableMetadata();
-    $crawler->filter('embedded-content')
-      ->each(function (Crawler $crawler) use ($document, $bubbleable) {
+    $crawler->filter('embedded-content')->each(function (Crawler $crawler) use ($document, &$bubbleable) {
         /** @var \DOMElement $node */
         $node = $crawler->getNode(0);
         $plugin_config = Json::decode($node->getAttribute('data-plugin-config'));
         $plugin_id = $node->getAttribute('data-plugin-id');
 
-        if (!$plugin_id || !$plugin_config) {
-          return;
+      if (!$plugin_id) {
+        return;
+      }
+      try {
+        /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
+        $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $plugin_config ?? []);
+        $bubbleable->addAttachments($instance->getAttachments());
+        $replacement = $instance->build();
+        $context = new RenderContext();
+        $render = $this->renderer->executeInRenderContext($context, fn() => $this->renderer->render($replacement));
+        if (!$context->isEmpty()) {
+          $bubbleable = $bubbleable->merge($context->pop());
         }
-        try {
-          /** @var \Drupal\ckeditor5_embedded_content\EmbeddedContentInterface $instance */
-          $instance = $this->embeddedContentPluginManager->createInstance($plugin_id, $plugin_config);
-          $bubbleable->addAttachments($instance->getAttachments());
-          $replacement = $instance->build();
-          $context = new RenderContext();
-          $render = $this->renderer->executeInRenderContext($context, fn() => $this->renderer->render($replacement));
-          if (!$context->isEmpty()) {
-            $bubbleable->merge($context->pop());
-          }
-        }
-        catch (\Exception $e) {
-          $render = (new TranslatableMarkup('Something went wrong.'));
-        }
+      }
+      catch (\Exception $e) {
+        $render = (new TranslatableMarkup('Something went wrong.'));
+      }
         // Don't throw html5 errors such as embedded media.
         libxml_use_internal_errors(TRUE);
         $new = Html::load($render);
@@ -106,9 +105,9 @@ class EmbeddedContent extends FilterBase implements ContainerFactoryPluginInterf
         $new_node = $document->importNode($xpath->query('//body')->item(0), TRUE);
         libxml_use_internal_errors(FALSE);
         $node->parentNode->replaceChild($new_node, $node);
-      });
+    });
     $result = new FilterProcessResult(Html::serialize($document));
-    $result->merge($bubbleable);
+    $result->addCacheableDependency($bubbleable);
     return $result;
   }
 

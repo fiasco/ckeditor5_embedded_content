@@ -7,20 +7,22 @@ import EmbeddedContentUI from './embeddedcontentui';
  */
 export default class EmbeddedContent extends Plugin {
 
-  /**
-   * @inheritdoc
-   */
-  static get requires() {
-    return [
-      EmbeddedContentEditing,
-      EmbeddedContentUI
-    ];
-  }
+    /**
+     * @inheritdoc
+     */
+    static get requires()
+    {
+        return [
+        EmbeddedContentEditing,
+        EmbeddedContentUI
+        ];
+    }
 
-  /**
-   * @inheritdoc
-   */
-  static get pluginName() {
-    return 'embeddedContent';
-  }
+    /**
+     * @inheritdoc
+     */
+    static get pluginName()
+    {
+        return 'embeddedContent';
+    }
 }

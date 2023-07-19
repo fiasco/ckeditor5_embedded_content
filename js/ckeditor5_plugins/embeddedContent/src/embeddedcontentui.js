@@ -34,6 +34,7 @@ export default class EmbeddedContentUI extends Plugin {
     }
 
     const { dialogURL, openDialog, dialogSettings = {} } = options;
+    dialogSettings.selector = `${dialogSettings.selector}-${editor.id}`;
     if (!dialogURL || typeof openDialog !== 'function') {
       return;
     }
@@ -58,6 +59,7 @@ export default class EmbeddedContentUI extends Plugin {
           url.searchParams.append('plugin_id', modelElement.getAttribute('embeddedContentPluginId'));
           url.searchParams.append('plugin_config', modelElement.getAttribute('embeddedContentPluginConfig'));
         }
+        url.searchParams.append('editor_id', editor.id);
         openDialog(
             url.toString(),
             ({attributes}) => {
@@ -81,6 +83,7 @@ export default class EmbeddedContentUI extends Plugin {
         const query = {
           plugin_id: modelElement.getAttribute('embeddedContentPluginId'),
           plugin_config: modelElement.getAttribute('embeddedContentPluginConfig'),
+          editor_id: editor.id,
         };
         openDialog(
           `${dialogURL}?${new URLSearchParams(query)}`,

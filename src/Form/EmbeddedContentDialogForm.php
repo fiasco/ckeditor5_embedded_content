@@ -62,10 +62,11 @@ class EmbeddedContentDialogForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $uuid = NULL) {
-
     $request = $this->getRequest();
 
+    $editor_id = $request->query->get('editor_id', '');
     $config = $form_state->getUserInput()['config'] ?? [];
+    $this->ajaxWrapper .= '-' . $editor_id;
 
     if (!$config) {
       $plugin_config = ($plugin_config = $request->get('plugin_config')) ? Xss::filter($plugin_config) : '';
@@ -78,7 +79,8 @@ class EmbeddedContentDialogForm extends FormBase {
       }
     }
 
-    $form['#modal_selector'] = '#embedded-content-dialog-form';
+    $form['editor_id'] = ['#value' => $editor_id, '#type' => 'value'];
+    $form['#modal_selector'] = '#embedded-content-dialog-form-' . $editor_id;
 
     if ($uuid) {
       $form['uuid'] = [
@@ -96,6 +98,7 @@ class EmbeddedContentDialogForm extends FormBase {
     }
     $plugin_id = $config['plugin_id'] ?? NULL;
 
+    $update_button = 'update_' . $editor_id;
     $form['config'] = [
       '#type' => 'container',
       '#tree' => TRUE,
@@ -111,6 +114,20 @@ class EmbeddedContentDialogForm extends FormBase {
           return $definition['label'];
         }, $definitions),
         '#required' => TRUE,
+        '#ajax' => [
+          'callback' => [$this, 'updateFormElement'],
+          'event' => 'change',
+          'wrapper' => $this->ajaxWrapper,
+          'trigger_as' => ['name' => $update_button],
+        ],
+      ],
+      'update' => [
+        '#name' => $update_button,
+        '#type' => 'submit',
+        '#value' => $this->t('Update'),
+        '#attributes' => [
+          'class' => ['js-hide'],
+        ],
         '#ajax' => [
           'callback' => [$this, 'updateFormElement'],
           'event' => 'change',
@@ -138,6 +155,7 @@ class EmbeddedContentDialogForm extends FormBase {
       '#type' => 'actions',
       'submit' => [
         '#type' => 'submit',
+        '#name' => 'submit_' . $editor_id,
         '#value' => $this->t('Submit'),
         '#ajax' => [
           'callback' => [$this, 'ajaxSubmitForm'],
@@ -184,14 +202,15 @@ class EmbeddedContentDialogForm extends FormBase {
 
     $response = new AjaxResponse();
 
+    $selector = '#embedded-content-dialog-form-' . $form_state->getValue('editor_id');
     $response->addCommand(new EditorDialogSave([
       'attributes' => [
         'data-plugin-id' => $config['plugin_id'],
         'data-plugin-config' => Json::encode($config['plugin_config'] ?? []),
       ],
-    ]));
+    ], $selector));
 
-    $response->addCommand(new CloseModalDialogCommand(FALSE, '#embedded-content-dialog-form'));
+    $response->addCommand(new CloseModalDialogCommand(FALSE, $selector));
     return $response;
   }
 

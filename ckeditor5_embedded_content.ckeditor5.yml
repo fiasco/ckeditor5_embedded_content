@@ -14,6 +14,7 @@ ckeditor5_embedded_content_embeddedContent:
           width: 80%
           dialogClass: embedded-content-widget-modal
           title: Create embedded content
+          selector: '#embedded-content-dialog-form'
   drupal:
     label: Embedded content
     elements:

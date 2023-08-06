@@ -83,6 +83,7 @@ class StyledList extends EmbeddedContentPluginBase implements EmbeddedContentInt
         self::GREEN => $this->t('Green'),
         self::RED => $this->t('Red'),
       ],
+      '#default_value' => $this->configuration['style'],
     ];
 
     $form['items'] = [
@@ -103,7 +104,6 @@ class StyledList extends EmbeddedContentPluginBase implements EmbeddedContentInt
         '#type' => 'text_format',
         '#title' => $this->t('Body'),
         '#format' => $this->configuration['items'][$delta]['body']['format'] ?? 'basic_html',
-        '#allowed_formats' => ['basic_html'],
         '#default_value' => $this->configuration['items'][$delta]['body']['value'] ?? '',
         '#required' => TRUE,
       ];

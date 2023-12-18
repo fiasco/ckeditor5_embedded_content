@@ -21,9 +21,12 @@ class EmbeddedContent extends CKEditor5PluginDefault {
       ->toString(TRUE)
       ->getGeneratedUrl();
     $static_plugin_config['embeddedContent']['dialogURL'] = $embedded_content_dialog_url;
-    $embedded_content_preview_url = Url::fromRoute('ckeditor5_embedded_content.preview', [
+    $url = Url::fromRoute('ckeditor5_embedded_content.preview', [
       'editor' => $editor->id(),
-    ])
+    ]);
+    $token = \Drupal::csrfToken()->get($url->getInternalPath());
+    $url->setOptions(['query' => ['token' => $token]]);
+    $embedded_content_preview_url = $url
       ->toString(TRUE)
       ->getGeneratedUrl();
     $static_plugin_config['embeddedContent']['previewURL'] = $embedded_content_preview_url;

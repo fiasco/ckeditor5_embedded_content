@@ -13,3 +13,4 @@ ckeditor5_embedded_content.preview:
     _controller: '\Drupal\ckeditor5_embedded_content\Controller\EmbeddedContentPreview::preview'
   requirements:
     _custom_access: '\Drupal\ckeditor5_embedded_content\Controller\EmbeddedContentPreview::checkAccess'
+    _csrf_token: 'TRUE'

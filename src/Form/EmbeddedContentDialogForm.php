@@ -69,8 +69,9 @@ class EmbeddedContentDialogForm extends FormBase {
     $this->ajaxWrapper .= '-' . $editor_id;
 
     if (!$config) {
-      $plugin_config = ($plugin_config = $request->get('plugin_config')) ? Xss::filter($plugin_config) : '';
-      $plugin_id = $request->get('plugin_id');
+      $options = $request->request->all()['dialogOptions'] ?? [];
+      $plugin_config = ($plugin_config = $options['plugin_config'] ?? '') ? Xss::filter($plugin_config) : '';
+      $plugin_id = $options['plugin_id'] ?? '';
       if ($plugin_id && $plugin_config) {
         $config = [
           'plugin_id' => $plugin_id,

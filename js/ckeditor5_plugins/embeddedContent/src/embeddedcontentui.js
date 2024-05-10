@@ -56,8 +56,12 @@ export default class EmbeddedContentUI extends Plugin {
         const modelElement = editor.model.document.selection.getSelectedElement();
         const url = new URL(dialogURL, document.baseURI);
         if (modelElement && typeof modelElement.name !== 'undefined' && modelElement.name === 'embeddedContent') {
-          url.searchParams.append('plugin_id', modelElement.getAttribute('embeddedContentPluginId'));
-          url.searchParams.append('plugin_config', modelElement.getAttribute('embeddedContentPluginConfig'));
+          dialogSettings.plugin_id = modelElement.getAttribute('embeddedContentPluginId');
+          dialogSettings.plugin_config = modelElement.getAttribute('embeddedContentPluginConfig');
+        }
+        else {
+          delete dialogSettings.plugin_id;
+          delete dialogSettings.plugin_config;
         }
         url.searchParams.append('editor_id', editor.id);
         openDialog(
